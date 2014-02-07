@@ -31,12 +31,10 @@ namespace MailChimp.Tests
             MailChimpManager mc = new MailChimpManager(TestGlobal.Test_APIKey);
 
             //  Act
-            List<CampaignForEmail> details = mc.GetCampaignsForEmail(new EmailParameter()
-            {
-                Email = "customeremail@righthere.com"
-            });
+            List<CampaignForEmail> details = mc.GetCampaignsForEmail(TestGlobal.KnownEmail1);
 
             //  Assert
+            Assert.IsTrue(details.Count.Equals(0));
             Debug.WriteLine(details.Count);
         }
 
@@ -47,12 +45,10 @@ namespace MailChimp.Tests
             MailChimpManager mc = new MailChimpManager(TestGlobal.Test_APIKey);
 
             //  Act
-            List<ListForEmail> details = mc.GetListsForEmail(new EmailParameter()
-            {
-                Email = "customeremail@righthere.com"
-            });
+            List<ListForEmail> details = mc.GetListsForEmail(TestGlobal.KnownEmail0);
 
             //  Assert
+            Assert.IsTrue(details.Count > 0);
             Debug.WriteLine(details.Count);
         }
 
@@ -88,7 +84,7 @@ namespace MailChimp.Tests
             //  Arrange
             MailChimpManager mc = new MailChimpManager(TestGlobal.Test_APIKey);
             ListResult lists = mc.GetLists();
-            string listId = lists.Data[1].Id;
+            string listId = lists.Data[0].Id;
 
             //  Act
             Matches matches = mc.SearchMembers("customeremail@righthere.com", listId);
@@ -105,7 +101,7 @@ namespace MailChimp.Tests
             //  Arrange
             MailChimpManager mc = new MailChimpManager(TestGlobal.Test_APIKey);
             ListResult lists = mc.GetLists();
-            string listId = lists.Data[1].Id;
+            string listId = lists.Data[0].Id;
 
             //  Act
             Matches matches = mc.SearchMembers("customeremail", listId);

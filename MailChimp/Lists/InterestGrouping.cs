@@ -8,7 +8,7 @@ namespace MailChimp.Lists
     /// Interest grouping
     /// </summary>
     [DataContract]
-    public class InterestGrouping
+    public class InterestGrouping 
     {
         /// <summary>
         /// Grouping "id" from lists/interest-groupings (either this or name must be present) - 

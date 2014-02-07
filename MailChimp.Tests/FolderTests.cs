@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Collections.Generic;
 using MailChimp.Folders;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -15,7 +16,7 @@ namespace MailChimp.Tests
             MailChimpManager mc = new MailChimpManager(TestGlobal.Test_APIKey);
 
             //  Act
-            List<FolderListResult> details = mc.GetFolders("campaign");
+            List<FolderListResult> details = mc.GetFolders(FolderType.campaign);
 
             //  Assert
             Assert.IsNotNull(details);
@@ -28,7 +29,7 @@ namespace MailChimp.Tests
             MailChimpManager mc = new MailChimpManager(TestGlobal.Test_APIKey);
 
             //  Act
-            FolderAddResult details = mc.AddFolder("TestFolder", "campaign");
+            FolderAddResult details = mc.AddFolder("TestFolder", FolderType.campaign);
 
             //  Assert
             Assert.IsNotNull(details);
@@ -40,10 +41,11 @@ namespace MailChimp.Tests
         {
             //  Arrange
             MailChimpManager mc = new MailChimpManager(TestGlobal.Test_APIKey);
-            int testFolderId = 42; /* Update with your folderId */
+            var folder = mc.GetFolders(FolderType.campaign).Where(f => f.FolderName.StartsWith("TestFolder")).FirstOrDefault();
+
 
             //  Act
-            FolderActionResult details = mc.UpdateFolder(testFolderId, "New Test folder updated", "campaign");
+            FolderActionResult details = mc.UpdateFolder(folder.FolderId, "TestFolderupdated", FolderType.campaign);
 
             //  Assert
             Assert.IsNotNull(details);
@@ -55,10 +57,11 @@ namespace MailChimp.Tests
         {
             //  Arrange
             MailChimpManager mc = new MailChimpManager(TestGlobal.Test_APIKey);
-            int testFolderId = 42; /* Update with your folderId */
+            var folder = mc.GetFolders(FolderType.campaign).Where(f => f.FolderName.StartsWith("TestFolder")).FirstOrDefault();
+
 
             //  Act
-            FolderActionResult details = mc.DeleteFolder(testFolderId, "campaign");
+            FolderActionResult details = mc.DeleteFolder(folder.FolderId, FolderType.campaign);
 
             //  Assert
             Assert.IsNotNull(details);

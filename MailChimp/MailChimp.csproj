@@ -60,12 +60,16 @@
     <Compile Include="Campaigns\CampaignActionResult.cs" />
     <Compile Include="Campaigns\CampaignSegmentCriteria.cs" />
     <Compile Include="Campaigns\CampaignTrackingOptions.cs" />
+    <Compile Include="Campaigns\CampaignType.cs" />
     <Compile Include="Campaigns\CampaignTypeAbsplitOptions.cs" />
     <Compile Include="Campaigns\CampaignTypeAutoResponderOptions.cs" />
     <Compile Include="Campaigns\CampaignTypeOptions.cs" />
     <Compile Include="Campaigns\CampaignTypeRssOptions.cs" />
+    <Compile Include="Folders\FolderType.cs" />
     <Compile Include="Helper\Match.cs" />
     <Compile Include="Helper\Matches.cs" />
+    <Compile Include="Lists\InterestGroupingType.cs" />
+    <Compile Include="Lists\ListMergeVarsResult.cs" />
     <Compile Include="Reports\Absplit.cs" />
     <Compile Include="Reports\Clicks.cs" />
     <Compile Include="Reports\Timeseries.cs" />
