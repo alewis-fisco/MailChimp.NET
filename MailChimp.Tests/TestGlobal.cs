@@ -1,5 +1,6 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using MailChimp.Helper;
 
 namespace MailChimp.Tests
 {
@@ -20,7 +21,67 @@ namespace MailChimp.Tests
             //  Set this to your Mailchimp API key for testing
             //  See http://kb.mailchimp.com/article/where-can-i-find-my-api-key
             //  for help finding your API key
-            Test_APIKey = "yourapikeyhere-us2";
+            Test_APIKey = "";
+        }
+
+
+        public static EmailParameter KnownEmail0
+        {
+            get
+            {
+                return new EmailParameter()
+                {
+                    Email = "customeremail@righthere.com"
+                };
+            }
+        }
+
+        public static EmailParameter KnownEmail1
+        {
+            get
+            {
+                return new EmailParameter()
+                {
+                    Email = "customeremail1@righthere.com"
+                };
+            }
+
+        }
+
+        public static EmailParameter KnownEmail2
+        {
+            get
+            {
+                return new EmailParameter()
+                {
+                    Email = "customeremail2@righthere.com"
+                };
+            }
+
+        }
+
+        public static string KnownListName
+        {
+            get
+            {
+                return "Test";
+            }
+        }
+
+        public static string KnownGrouping
+        {
+            get
+            {
+                return "testGrouping";
+            }
+        }
+
+        public static string KnownGroup
+        {
+            get
+            {
+                return "testGroup";
+            }
         }
     }
 }

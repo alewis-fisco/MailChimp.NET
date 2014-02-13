@@ -84,38 +84,6 @@ namespace MailChimp
 
         #endregion
 
-        #region Helper Methods
-
-        /// <summary>
-        /// Formats a date parameter for the mailchimp API.  If date is equal to DateTime.MinValue, then an empty string is returned.
-        /// </summary>
-        /// <param name="date"></param>
-        /// <returns></returns>
-        public static string ConvertDateTimeToMailChimpAPI(DateTime date)
-        {
-            string strDate = (date == DateTime.MinValue) ? "" : date.ToString("yyyy-MM-dd HH:mm:ss");
-            return strDate;
-        }
-
-        /// <summary>
-        /// Formats a date parameter for the mailchimp API.  If date is null or equal to DateTime.MinValue, then an empty string is returned.
-        /// </summary>
-        /// <param name="date"></param>
-        /// <returns></returns>
-        public static string ConvertDateTimeToMailChimpAPI(DateTime? date)
-        {
-            if (date.HasValue)
-            {
-                return ConvertDateTimeToMailChimpAPI(date.Value);
-            }
-            else
-            {
-                return "";
-            }
-        }
-
-        #endregion
-
         #region API: Campaigns
 
         /// <summary>
@@ -431,6 +399,23 @@ namespace MailChimp
             //  Make the call:
             return MakeAPICall<Campaign>(apiAction, args);
         }
+
+        /// <summary>
+        ///Create a new draft campaign to send. You can not have more than 32,000 campaigns in your account.
+        ///See http://apidocs.mailchimp.com/api/2.0/campaigns/create.php for explanation of full options.
+        /// </summary>
+        /// <param name="type">The Campaign Type to create </param>
+        /// <param name="options">A struct of the standard options for this campaign.</param>
+        /// <param name="content">The content for this campaign </param>
+        /// <param name="segmentOptions">optional - if you wish to do Segmentation with this campaign this array should contain: see CampaignSegmentTest(). It's suggested that you test your options against campaignSegmentTest().</param>
+        /// <param name="typeOptions">optional - various extra options based on the campaign type</param>
+        /// <returns></returns>
+        public Campaign CreateCampaign(CampaignType type, CampaignCreateOptions options, CampaignCreateContent content, CampaignSegmentOptions segmentOptions = null, CampaignTypeOptions typeOptions = null)
+        {
+            return CreateCampaign(type.ToString(), options, content, segmentOptions, typeOptions);
+        }
+
+
         #endregion
 
         #region API: Folders
@@ -457,6 +442,16 @@ namespace MailChimp
         }
 
         /// <summary>
+        /// List all the folders of a certain type
+        /// </summary>
+        /// <param name="type">the type of folders to return</param>
+        /// <returns></returns>
+        public List<FolderListResult> GetFolders(FolderType type)
+        {
+            return GetFolders(type.ToString());
+        }
+
+        /// <summary>
         /// Add a new folder to file campaigns, autoresponders, or templates in
         /// </summary>
         /// <param name="folderName">a unique name for a folder (max 100 bytes)</param>
@@ -477,6 +472,17 @@ namespace MailChimp
 
             //  Make the call:
             return MakeAPICall<FolderAddResult>(apiAction, args);
+        }
+
+        /// <summary>
+        /// Add a new folder to file campaigns, autoresponders, or templates in
+        /// </summary>
+        /// <param name="folderName">a unique name for a folder (max 100 bytes)</param>
+        /// <param name="type">the type of folder to create</param>
+        /// <returns></returns>
+        public FolderAddResult AddFolder(string folderName, FolderType type)
+        {
+            return AddFolder(folderName, type.ToString());
         }
 
         /// <summary>
@@ -503,6 +509,16 @@ namespace MailChimp
         }
 
         /// <summary>
+        /// Delete a campaign, autoresponder, or template folder. Note that this will simply make whatever was in the folder appear unfiled, no other data is removed
+        /// </summary>
+        /// <param name="folderId">The folderId to delete.</param>
+        /// <param name="type">The folder type</param>
+        /// <returns></returns>
+        public FolderActionResult DeleteFolder(int folderId, FolderType type)
+        {
+            return DeleteFolder(folderId, type.ToString());
+        }
+        /// <summary>
         /// Update the name of a folder for campaigns, autoresponders, or templates
         /// </summary>
         /// <param name="fId">the folder id to update</param>
@@ -527,6 +543,17 @@ namespace MailChimp
             return MakeAPICall<FolderActionResult>(apiAction, args);
         }
 
+        /// <summary>
+        /// Update the name of a folder for campaigns, autoresponders, or templates
+        /// </summary>
+        /// <param name="folderId">the folder id to update</param>
+        /// <param name="folderName">a new, unique name for the folder (max 100 bytes)</param>
+        /// <param name="type">the type of folder to update</param>
+        /// <returns></returns>
+        public FolderActionResult UpdateFolder(int folderId, string folderName, FolderType type)
+        {
+            return UpdateFolder(folderId, folderName, type.ToString());
+        }
 
         #endregion
 
@@ -715,7 +742,7 @@ namespace MailChimp
         /// Get all the information for particular members of a list
         /// </summary>
         /// <param name="listId">the list id to connect to (can be gathered using GetLists())</param>
-        /// <param name="listOfEmails">an array of up to 50 email address struct to retrieve member information for</param>
+        /// <param name="listOfEmails">an array of up to 50 email address object to retrieve member information for</param>
         /// <returns></returns>
         public MemberInfoResult GetMemberInfo(string listId, List<EmailParameter> listOfEmails)
         {
@@ -733,6 +760,18 @@ namespace MailChimp
             //  Make the call:
             return MakeAPICall<MemberInfoResult>(apiAction, args);
         }
+
+        /// <summary>
+        /// Gets a single MemberInfo for an email address
+        /// </summary>
+        /// <param name="listId">the list id to connect to (can be gathered using GetLists())</param>
+        /// <param name="email">email address object to retrieve member information for</param>
+        /// <returns>The MemberInfo that coresponds to the email, or null if not found </returns>
+        public MemberInfo GetMemberInfo(string listId, EmailParameter email)
+        {
+            return GetMemberInfo(listId, new List<EmailParameter>() { email })[email.Email];
+        }
+        
 
         /// <summary>
         /// Get all of the list members for a list that are of a particular status and 
@@ -969,6 +1008,179 @@ namespace MailChimp
             };
             return MakeAPICall<List<StaticSegmentResult>>(apiAction, args);
         }
+
+        /// <summary>
+        /// Add a new Interest Grouping - if interest groups for the List are not yet enabled, adding the first grouping will automatically turn them on.
+        /// </summary>
+        /// <param name="listId"></param>
+        /// <param name="type"></param>
+        /// <param name="name"></param>
+        /// <param name="groups"></param>
+        /// <returns></returns>
+        public object AddInterestGrouping(string listId, InterestGroupingType type, string name, IList<string> groups)
+        {
+            string apiAction = "lists/interest-grouping-add";
+
+            if (string.IsNullOrEmpty(name))
+                throw new ArgumentNullException("name", "The grouping name must be specified when adding an interest group");
+
+            if (groups == null || !groups.Any())
+                throw new ArgumentException("At least 1 group must be specified when adding a grouping");
+
+            object args = new 
+            {
+                apikey = this.APIKey,
+                id = listId,
+                name = name,
+                type = type.ToString(),
+                groups = groups
+            };
+
+            return MakeAPICall<object>(apiAction,args);
+        }
+
+        /// <summary>
+        /// Update the Name of an existing Interest Grouping
+        /// </summary>
+        /// <param name="groupingId"></param>
+        /// <param name="newName"></param>
+        /// <returns></returns>
+        public object UpdateInterestGroupingName(int groupingId, string newName)
+        {
+            string apiAction = "lists/interest-grouping-update";
+            object args = new
+            {
+                apikey = this.APIKey,
+                grouping_id = groupingId,
+                
+                //the name of the property to update. 
+                name = "name",
+                value = newName
+            };
+            return MakeAPICall<object>(apiAction, args);
+        }
+
+        /// <summary>
+        /// Update the type of an Interest Grouping. Only "hidden" and "checkboxes" grouping types can be converted between each other.
+        /// </summary>
+        /// <param name="groupingId"></param>
+        /// <param name="newType"></param>
+        /// <returns></returns>
+        public object UpdateInterestGroupingType(int groupingId, InterestGroupingType newType)
+        {
+            string apiAction = "";
+            object args = new
+            {
+                apikey = this.APIKey
+            };
+            return MakeAPICall<object>(apiAction, args);
+        }
+
+        /// <summary>
+        /// Delete an existing Interest Grouping - this will permanently delete all contained interest groups and will remove those selections from all list members
+        /// </summary>
+        /// <param name="groupingId"></param>
+        /// <returns></returns>
+        public object DeleteInterestGrouping(int groupingId)
+        {
+            string apiAction = "lists/interest-grouping-del";
+            object args = new
+            {
+                apikey = this.APIKey,
+                grouping_id = groupingId
+            };
+            return MakeAPICall<object>(apiAction, args);
+        }
+
+        /// <summary>
+        /// Add a single Interest Group - if interest groups for the List are not yet enabled, adding the first group will automatically turn them on.
+        /// </summary>
+        /// <param name="listId"></param>
+        /// <param name="groupName"></param>
+        /// <param name="groupingId"></param>
+        /// <returns></returns>
+        public object AddInterestGroup(string listId,string groupName, int groupingId)
+        {
+            string apiAction = "lists/interest-group-add";
+            object args = new
+            {
+                apikey = this.APIKey,
+                id = listId,
+                group_name = groupName,
+                grouping_id = groupingId
+                
+            };
+            return MakeAPICall<object>(apiAction, args);
+        }
+
+        /// <summary>
+        /// Change the name of an Interest Group
+        /// </summary>
+        /// <param name="listId"></param>
+        /// <param name="groupName"></param>
+        /// <param name="newName"></param>
+        /// <param name="groupingId"></param>
+        /// <returns></returns>
+        public object UpdateInterestGroup(string listId, string groupName, string newName, int groupingId)
+        {
+            string apiAction = "lists/interest-group-update";
+            object args = new
+            {
+                apikey = this.APIKey,
+                id = listId,
+                old_name = groupName,
+                new_name = newName,
+                grouping_id = groupingId
+            };
+            return MakeAPICall<object>(apiAction, args);
+        }
+
+        /// <summary>
+        /// Delete a single Interest Group - if the last group for a list is deleted, this will also turn groups for the list off.
+        /// </summary>
+        /// <param name="listId"></param>
+        /// <param name="groupName"></param>
+        /// <param name="groupingId"></param>
+        /// <returns></returns>
+        public object DeleteInterestGroup(string listId, string groupName, int groupingId)
+        {
+            string apiAction = "lists/interest-group-del";
+            object args = new
+            {
+                apikey = this.APIKey,
+                id = listId,
+                group_name = groupName,
+                grouping_id = groupingId
+            };
+            return MakeAPICall<object>(apiAction, args);
+        }
+
+        /// <summary>
+        /// Get the list of merge tags for a given list, including their name, tag, and required setting
+        /// </summary>
+        /// <param name="listId">The List Id</param>
+        /// <returns></returns>
+        public ListMergeVarsResult GetListMergeVars(string listId)
+        {
+            return GetListMergeVars(new string[] { listId });
+        }
+
+        /// <summary>
+        /// Get the list of merge tags for a given list, including their name, tag, and required setting
+        /// </summary>
+        /// <param name="listIds">An Array of List Ids</param>
+        /// <returns></returns>
+        public ListMergeVarsResult GetListMergeVars(string[] listIds)
+        {
+            string apiAction = "/lists/merge-vars";
+            object args = new
+            {
+                apikey = this.APIKey,
+                id = listIds
+            };
+            return MakeAPICall<ListMergeVarsResult>(apiAction, args);
+        }
+
 
         #endregion
 

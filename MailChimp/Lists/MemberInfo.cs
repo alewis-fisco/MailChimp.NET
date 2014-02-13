@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System.Linq;
+using System.Collections.Generic;
 using System.Runtime.Serialization;
 
 namespace MailChimp.Lists
@@ -212,15 +213,6 @@ namespace MailChimp.Lists
         }
 
         /// <summary>
-        /// Static segments this member belongs to
-        /// </summary>
-        [DataMember(Name = "static_segments")]
-        public List<StaticSegment> StaticSegments {
-            get;
-            set;
-        }
-
-        /// <summary>
         /// Notes entered for this member
         /// </summary>
         [DataMember(Name = "notes")]
@@ -253,6 +245,9 @@ namespace MailChimp.Lists
         [DataContract]
         public class MemberGroup
         {
+            [DataMember(Name = "id")]
+            public int Id { get; set; }
+
             [DataMember(Name = "name")]
             public string Name { get; set; }
 
@@ -268,6 +263,28 @@ namespace MailChimp.Lists
                 [DataMember(Name = "interested")]
                 public bool Interested { get; set; }
             }
+
+            public Grouping ToGrouping()
+            {
+                Grouping grouping = new Grouping()
+                {
+                    Id = this.Id,
+                    Name = this.Name,
+                    GroupNames = this.Groups.Where(g => g.Interested).Select(g => g.Name).ToList()
+                };
+
+                return grouping;
+            }
+        }
+
+        public MergeVar ToMergeVar()
+        {
+            var mergeVar = new MergeVar()
+            {
+                Groupings = this.Groups.Select(g => g.ToGrouping()).ToList()
+            };
+
+            return mergeVar;
         }
     }
 }

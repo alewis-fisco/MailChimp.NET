@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Linq;
+using System.Collections.Generic;
 using System.Runtime.Serialization;
 
 namespace MailChimp.Lists
@@ -34,6 +36,20 @@ namespace MailChimp.Lists
         {
             get;
             set;
+        }
+
+        public MemberInfo this[string emailAddress]
+        {
+            get
+            {
+                if (string.IsNullOrEmpty(emailAddress))
+                    throw new ArgumentNullException("emailAddress");
+
+                if (this.SuccessCount == 0 || this.Data == null)
+                    return null;
+
+                return this.Data.Where(mi => mi.Email.Equals(emailAddress)).FirstOrDefault();
+            }
         }
     }
 }

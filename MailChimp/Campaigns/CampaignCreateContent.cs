@@ -1,5 +1,4 @@
 ﻿using System.Runtime.Serialization;
-using System.Collections.Generic;
 
 namespace MailChimp.Campaigns
 {
@@ -22,7 +21,7 @@ namespace MailChimp.Campaigns
         /// when using a template instead of raw HTML, each key should be the unique mc:edit area name from the template.
         /// </summary>
         [DataMember(Name = "sections")]
-        public Dictionary<string, string> Sections
+        public object Sections
         {
             get;
             set;
