@@ -66,11 +66,6 @@
       <Name>MailChimp</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <None Include="ListInterestGroup.orderedtest">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
       <ItemGroup>

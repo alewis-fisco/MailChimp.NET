@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using System.Collections.Generic;
 using MailChimp.Campaigns;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -28,11 +27,10 @@ namespace MailChimp.Tests
         {
             //  Arrange
             MailChimpManager mc = new MailChimpManager(TestGlobal.Test_APIKey);
-            
-            var campaign = mc.GetCampaigns().Data.FirstOrDefault();
+            string campaignId = "yourcampaignidhere";
 
             //  Act
-            CampaignContent details = mc.GetCampaignContent(campaign.Id);
+            CampaignContent details = mc.GetCampaignContent(campaignId);
 
             //  Assert
             Assert.IsFalse(string.IsNullOrWhiteSpace(details.Html));
@@ -45,12 +43,12 @@ namespace MailChimp.Tests
             MailChimpManager mc = new MailChimpManager(TestGlobal.Test_APIKey);
             List<string> testEmails = new List<string>()
             {
-                TestGlobal.KnownEmail0.Email
+                "testemails@domain.com"
             };
-            var campaign = mc.GetCampaigns().Data.FirstOrDefault();
+            string campaignId = "yourcampaignidhere";
 
             //  Act
-            CampaignActionResult details = mc.SendCampaignTest(campaign.Id, testEmails);
+            CampaignActionResult details = mc.SendCampaignTest(campaignId, testEmails);
 
             //  Assert
             Assert.IsTrue(details.Complete);
@@ -78,15 +76,13 @@ namespace MailChimp.Tests
             ListResult lists = mc.GetLists();
             CampaignSegmentOptions options = new CampaignSegmentOptions();
             options.Match= "All";
-            string dateListCreated = lists.Data[0].DateCreated;
+            string dateListCreated = lists.Data[1].DateCreated;
             List<CampaignSegmentCriteria> conditions = new List<CampaignSegmentCriteria>();
             conditions.Add(new CampaignSegmentCriteria { Field = "date", Operator = "eq", Value = dateListCreated });
             options.Conditions = conditions;
-            string listId = lists.Data[0].Id;
-
+            string listId = lists.Data[1].Id;
             //  Act
             CampaignSegmentTestResult result = mc.CampaignSegmentTest(listId,options);          
-            
             //  Assert
             Assert.IsTrue(result.Total == 1);
         }
@@ -96,10 +92,10 @@ namespace MailChimp.Tests
             // Arrange
             MailChimpManager mc = new MailChimpManager(TestGlobal.Test_APIKey);
             ListResult lists = mc.GetLists();
-            string listID = lists.Data[0].Id;
+            string listID = lists.Data[1].Id;
             CampaignSegmentOptions segmentOptions = new CampaignSegmentOptions();
             segmentOptions.Match = "All";
-            string dateListCreated = lists.Data[0].DateCreated;
+            string dateListCreated = lists.Data[1].DateCreated;
             segmentOptions.Conditions = new List<CampaignSegmentCriteria>();
             segmentOptions.Conditions.Add(new CampaignSegmentCriteria { Field = "date", Operator = "eq", Value = dateListCreated });
             CampaignCreateContent content = new CampaignCreateContent();
