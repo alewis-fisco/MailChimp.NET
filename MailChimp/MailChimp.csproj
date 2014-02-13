@@ -141,10 +141,7 @@
     <Compile Include="Webhooks\UnsubscribeWebhookResult.cs" />
     <Compile Include="Webhooks\WebhookMerges.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Ecomm\" />
-    <Folder Include="VIP\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
