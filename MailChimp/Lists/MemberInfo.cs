@@ -281,6 +281,8 @@ namespace MailChimp.Lists
         {
             var mergeVar = new MergeVar()
             {
+                FirstName = this.FirstName,
+                LastName = this.LastName,
                 Groupings = this.Groups.Select(g => g.ToGrouping()).ToList()
             };
 

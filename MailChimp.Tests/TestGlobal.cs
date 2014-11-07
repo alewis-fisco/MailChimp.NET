@@ -13,7 +13,7 @@ namespace MailChimp.Tests
         /// <summary>
         /// The global mailchimp API key
         /// </summary>
-        public static string Test_APIKey = string.Empty;
+        public static string Test_APIKey = "2b86828a0ff0f296c521e7bf9897908f-us3";
 
         [AssemblyInitialize()]
         public static void AllTestInit(TestContext testContext)
@@ -21,7 +21,7 @@ namespace MailChimp.Tests
             //  Set this to your Mailchimp API key for testing
             //  See http://kb.mailchimp.com/article/where-can-i-find-my-api-key
             //  for help finding your API key
-            Test_APIKey = "";
+            Test_APIKey = "2b86828a0ff0f296c521e7bf9897908f-us3";
         }
 
 

@@ -22,6 +22,13 @@ namespace MailChimp.Lists
             set;
         }
 
+        [DataMember(Name = "FNAME")]
+        public string FirstName { get; set; }
+
+
+        [DataMember(Name = "LNAME")]
+        public string LastName { get; set; }
+
         /// <summary>
         /// Interest Groupings 
         /// </summary>
